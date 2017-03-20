@@ -1,0 +1,221 @@
+﻿@model List<ShoppingWebSite.ProductTable>
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<h2>Cart</h2>
+
+<p>
+    @Html.ActionLink("Go back to Products", "Index", "ProductTables")
+</p>
+<table class="grid">
+    <tr>
+        <th>Name</th>
+        <th>Extension</th>
+        <th>Edit</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Price</td>
+            <td>
+               @Html.DropDownList("quantity", item.Quantity, "--Select Quantity--")
+                <input type="submit" id="quantitysubmit" class="submit button"/>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#quantitysubmit').click(function (e) {
+                                debugger;
+                                e.preventDefault();
+                                var b = parseInt(@Html.DisplayFor(modelItem => item.Id));
+                            var emailValue = document.getElementById("quantity").value;
+                            
+                                $.ajax({
+                                    url: '@Url.Action("UpdateProduct")',
+                                    type: "POST",
+                                    data: { prodID: b, quantity: emailValue },
+                                    success: function (data) {},
+                                    error: function () { alert("error");}
+                                });
+                            });
+                        });
+                </script>
+            </td>
+            <td>@item.StaticPrice</td>
+        </tr>
+    }
+    <tr>
+        <td>
+            Total
+        </td>
+        <td>
+
+            @{ var r = Model.Sum(v => Convert.ToDecimal(v.Price));}
+            $ @Html.Raw(Convert.ToString(r))
+
+        </td>
+
+        <td>
+            <input type="submit" href="#" onclick="location.href='@Url.Action("Buy", "Buy", new {price = r})'" value="Buy" class="btn btn-success" />
+        </td>
+    </tr>
+</table>
+
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Quantity
+        </th>
+    </tr>
+
+
+    @*@{
+            var grid = new WebGrid(Model, rowsPerPage: 10);
+            @grid.GetHtml(columns: grid.Columns(
+            grid.Column(columnName: "LastName", header: "Last Name", canSort: true, format: @<text>@item.LastName</text>),
+            grid.Column(columnName: "LastName", header: "First Name", canSort: true, format: @<text>@item.Firstname</text>),
+            grid.Column(columnName: "ApptDates", header: "Appointment Dates", format: @<text> @Html.DropDownList(@item.AppointmentDate, Model.)</text>)
+            ));
+        }*@
+
+    @*@for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td style="width:100px;">
+                    <b>Item:</b> @Model[i].Name
+                </td>
+                <td style="width:200px;">
+                    <b>Total:</b> @Model[i].Price
+                </td>
+
+                <td>*@
+    @*@using (Html.BeginForm("UpdateProduct", "Cart"))
+        {*@
+    @*@Html.Hidden("prodID", Model[i].Id)
+
+
+        <b>Assign:</b>
+
+
+        @Html.DropDownList("quantity", Model[i].Quantity, "--Select Quantity--", new { onchange = "this.form.submit();" })*@
+
+
+
+    @*@Html.DropDownListFor(m => m[i].Id,  // THIS LINE CAUSES AN ERROR
+        Model[i].Quantity,
+        "", new { @id = "ddlStatus", @style = "width:100%", onchange = "this.form.submit();" })*@
+    @*}*@
+    @*</td>
+            </tr>
+        }*@
+
+
+
+
+    @*@using (Html.BeginForm("UpdateProduct", "Cart"))*@
+    @*@using (Html.BeginForm("UpdateProduct", "Cart", FormMethod.Post, new { id = "cartlist" }))*@
+
+
+    @*{
+        var count = 0;*@
+    @*@Html.Hidden()*@
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                $ @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td id="xd">
+                @*@ViewBag.qu=item.Price;*@
+                @*<script type="text/javascript">
+                        debugger;
+                        function foo(x) {
+
+                            v = 1;
+
+
+                            var myBox2 = document.getElementById('qua').value;
+
+                            var b = ViewBag.qu;
+                            var result = parseFloat(b).toFixed(2);
+                            var myResult = myBox2 * result;
+                            document.getElementById("MyEdit").innerHTML = myResult;
+
+                        }
+                    </script>
+                    <input type="text" id="qua" value="1" placeholder="Type Quantity" class="form-control" />
+                    <button class="btn btn-primary" id="submitbtn" type="submit" onclick="foo(this)">Update</button>*@
+                @using (Html.BeginForm("UpdateProduct", "Cart"))
+                {
+                    @Html.TextBox("Quantity")
+                    <input type="submit" id="quantitysubmit" value="Submit Quantity" />
+                    <script type="text/javascript">
+                        $(function () {
+                            $("quantitysubmit").on('click',function (e) {
+                                debugger;
+                                e.preventDefault();
+                                var b = parseInt(@Html.DisplayFor(modelItem => item.Id));
+                                var emailValue = document.getElementById("Quantity").value;
+                                $.ajax({
+                                    url: '/Cart/UpdateProduct',
+                                    data: { prodID: b, quantity: emailValue }
+                                });
+                            });
+                        });
+                    </script>
+                }
+
+
+            </td>
+            <td id="MyEdit"></td>
+            <td>
+                <input type="submit" href="#" onclick="location.href='@Url.Action("Delete", "Cart", new { id = item.Id })'" value="Delete this Item From Cart" class="btn btn-success" />
+            </td>
+
+        </tr>
+    }
+
+
+    <tr>
+        <td>
+            Total
+        </td>
+        <td>
+
+            @{ var e = Model.Sum(v => Convert.ToDecimal(v.Price));}
+            $ @Html.Raw(Convert.ToString(e))
+
+        </td>
+
+        <td>
+            <input type="submit" href="#" onclick="location.href='@Url.Action("Buy", "Buy", new {price = e})'" value="Buy" class="btn btn-success" />
+        </td>
+    </tr>
+</table>
+
+@*<script>
+    debugger;
+    $('#quantity').on('change', function (id, quantity) {
+        var data = { id, quantity };
+        $.post('Cart/UpdateProduct', data, function (responseData) {
+            //callback function
+        });
+
+    });</script>*@

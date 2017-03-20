@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ShoppingWebSite.Models.Products>
+
+@{
+    ViewBag.Title = "Index";
+}
+@section Scripts
+{
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+
+}
+
+<h2> &nbsp; &nbsp;   BUY NOW!! LIMITED TIME OFFER!!</h2>
+
+<div class="container" id="scr">
+    <div class="well well-sm">
+        <strong>Category Title</strong>
+        <div class="btn-group">
+            
+            <a href="#" id="grid" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-th"></span> Grid
+            </a>
+        </div>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <div class="item  col-xs-4 col-lg-4">
+            <div class="thumbnail">
+                
+                <img class="group list-group-image" src="/images/@(item.imagesrc)" alt="" />
+                <div class="caption">
+                    <h4 class="group inner list-group-item-heading">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </h4>
+                    <p class="group inner list-group-item-text">
+                        InStock: @Html.DisplayFor(modelItem => item.QuantityAvail)
+                        <br />
+                        Category: @Html.DisplayFor(modelItem => item.Category)
+                    </p>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <p class="lead">
+                                Price: $@Html.DisplayFor(modelItem => item.Price)
+                            </p>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <a class="btn btn-success" href="#" onclick="location.href='@Url.Action("Buy", "Product")'">Buy</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
